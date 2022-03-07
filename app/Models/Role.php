@@ -13,7 +13,13 @@ class Role extends Model
         'name',
     ];
 
-    public function users(){
+    // 1 op veel
+    /*public function users(){
         return $this->hasMany(User::class);
+    }*/
+
+    //veel op veel
+    public function users(){
+        return $this->belongsToMany(User::class, 'user_role');
     }
 }
