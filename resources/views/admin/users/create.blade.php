@@ -15,7 +15,7 @@
             </div>
             <div class="form-group">
                 {!! Form::label('Select roles: (CTRL + Click multiple') !!}
-                {!! Form::select('role_id', $roles,null,['class' =>'form-control']) !!}
+                {!! Form::select('roles[]', $roles,null,['class' =>'form-control','multiple'=>'multiple']) !!}
             </div>
             <div class="form-group">
                 {!! Form::label('is_active','Status:') !!}
