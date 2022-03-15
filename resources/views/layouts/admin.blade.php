@@ -71,13 +71,25 @@
                 </div>
             </div>
         </li>
+
         <li class="nav-item">
-            <a class="nav-link" href="{{asset('admin/users')}}">
+            <a class="nav-link" href="{{route('users.index')}}">
                 <i class="fas fa-fw fa-users"></i>
                 <span>Users</span>
             </a>
         </li>
-
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('media.index')}}">
+                <i class="fas fa-photo-video"></i>
+                <span>Media</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('post.index')}}">
+                <i class="fas fa-mail-bulk"></i>
+                <span>Post</span>
+            </a>
+        </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"

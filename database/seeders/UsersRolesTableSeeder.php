@@ -16,12 +16,18 @@ class UsersRolesTableSeeder extends Seeder
      */
     public function run()
     {
-        //Iedere user krijgt dus een random aantal rollen (1 tot 3)
-        $roles = Role::all();
+        /*Iedere user krijgt dus een random aantal rollen (1 tot 3)*/
+        $roles = Role::all();//ophalen rollen uit DB
         User::all()->each(function ($user) use ($roles){
-           $user->roles()->attach(
-               $roles->random(rand(1,3))->pluck('id')->toArray()
-           );
+            if($user['id']==1){
+                $user->roles()->sync([1]);
+            }elseif($user['id']==2){
+                $user->roles()->sync([3]);
+            }else{
+                $user->roles()->attach(
+                    $roles->random(rand(1,3))->pluck('id')->toArray()
+                );
+            }
         });
     }
 }

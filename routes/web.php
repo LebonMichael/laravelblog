@@ -45,8 +45,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function(){
 
 /** Beveiligd alle routes na admin (eerst inloggen) **/
 //Route::group(['prefix' => 'admin', 'middleware' => ['auth','admin]], function(){
-Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
-
-    Route::resource('photos', App\Http\Controllers\AdminPhotosController::class);
+Route::group(['prefix' => 'admin', 'middleware' => ['auth','verified']], function(){
     Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->middleware('verified')->name('homebackend');
+    Route::resource('photos', App\Http\Controllers\AdminPhotosController::class);
+    Route::resource('media', App\Http\Controllers\AdminMediasController::class);
+    Route::resource('post', App\Http\Controllers\AdminPostsController::class);
 });

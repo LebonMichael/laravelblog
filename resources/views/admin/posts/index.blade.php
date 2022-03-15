@@ -1,0 +1,31 @@
+@extends('layouts.admin')
+@section('content')
+    <h1>Posts</h1>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Photo</th>
+            <th>Owner</th>
+            <th>Category</th>
+            <th>Title</th>
+            <th>Body</th>
+            <th>Created</th>
+            <th>Updated</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Id</td>
+            <td>Photo</td>
+            <td>Owner</td>
+            <td>Category</td>
+            <td>Title</td>
+            <td>Body</td>
+            <td>Created</td>
+            <td>Updated</td>
+        </tr>
+        </tbody>
+    </table>
+
+@stop
