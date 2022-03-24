@@ -9,7 +9,7 @@ class Photo extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['file'];
+    protected $guarded = ['id'];
 
     //protected $guarded = ['id']; //alleen id nodig beschermt de id zodat hij uniek is
 

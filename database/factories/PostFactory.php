@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 
 /**
@@ -20,12 +21,14 @@ class PostFactory extends Factory
     {
         $users = User::pluck('id')->toArray();
         $title = $this->faker->sentence($nbwords = 6, $variableNbWords = true);
+        $slug = Str::slug($title,'-');
         return [
             //
             'user_id' => $this->faker->randomElement($users),
-            'category_id' => $this->faker->numberBetween($min = 1, $max = 2),
+            //'category_id' => $this->faker->numberBetween($min = 1, $max = 3),
             'photo_id' => $this->faker->numberBetween($min = 1, $max = 2),
             'title' => $title,
+            'slug' => $slug,
             'body' => $this->faker->realText($maxNbChars = 200, $indexSize = 2),
         ];
     }

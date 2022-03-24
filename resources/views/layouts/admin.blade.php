@@ -90,6 +90,12 @@
                 <span>Post</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{route('comments.index')}}">
+                <i class="fas fa-mail-bulk"></i>
+                <span>Comments</span>
+            </a>
+        </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"

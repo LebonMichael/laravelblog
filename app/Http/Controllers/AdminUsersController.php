@@ -29,7 +29,7 @@ class AdminUsersController extends Controller
         //
         //$users = User::all(); //eloquent way ORM
         //$users = User::orderBy('updated_at', 'desc')->paginate(20);
-        $users = User::withTrashed()->orderBy('updated_at', 'desc')->paginate(20);
+        $users = User::with(['photo','roles'])->withTrashed()->orderBy('updated_at', 'desc')->paginate(20);
         //$users = User::withTrashed()->get();
         //$users = DB::table('users')->get(); //query builder
         //dd($users);
