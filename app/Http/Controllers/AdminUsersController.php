@@ -118,7 +118,7 @@ class AdminUsersController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Responsegit
      */
     public function update(UsersEditRequest $request, $id)
     {

@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AdminPostCommentsController extends Controller
 {
@@ -13,7 +17,8 @@ class AdminPostCommentsController extends Controller
      */
     public function index()
     {
-        return view('admin.comments.index');
+        $comments = Comment::with(['user', 'post'])->latest()->paginate(10);
+        return view('admin.comments.index',compact('comments'));
     }
 
     /**
@@ -29,18 +34,30 @@ class AdminPostCommentsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+
+        if ($user = Auth::user()) {
+            $data = [
+                'reply_id' => $request->reply_id ,
+                'post_id' => $request->post_id,
+                'body' => $request->body,
+                'user_id' => $user->id,
+                'photo_id' => $user->photo_id,
+            ];
+            Comment::create($data);
+            Session::flash('postcomment_message', 'Message submitted and waits moderation');
+        }
+        return redirect()->back();
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -51,7 +68,7 @@ class AdminPostCommentsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -62,19 +79,26 @@ class AdminPostCommentsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        //
+        $comment = Comment::findOrFail($id);
+        if($request->is_active == 0){
+            $comment->is_active = 1;
+        }else{
+            $comment->is_active = 0;
+        }
+        $comment->update();
+        return redirect()->back();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

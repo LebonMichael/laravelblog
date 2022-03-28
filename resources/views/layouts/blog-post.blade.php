@@ -1,4 +1,3 @@
-
 <body>
 <!-- Header Area Start -->
 <header class="header-area">
@@ -146,14 +145,18 @@
                 <div class="col-12">
                     <div class="main-menu">
                         <nav class="navbar navbar-expand-lg">
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#gazetteMenu" aria-controls="gazetteMenu" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i> Menu</button>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                    data-target="#gazetteMenu" aria-controls="gazetteMenu" aria-expanded="false"
+                                    aria-label="Toggle navigation"><i class="fa fa-bars"></i> Menu
+                            </button>
                             <div class="collapse navbar-collapse" id="gazetteMenu">
                                 <ul class="navbar-nav mr-auto">
                                     <li class="nav-item active">
                                         <a class="nav-link" href="#">Today <span class="sr-only">(current)</span></a>
                                     </li>
                                     <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pages</a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                             <a class="dropdown-item" href="index.html">Home</a>
                                             <a class="dropdown-item" href="catagory.html">Catagory</a>
@@ -184,7 +187,8 @@
                                 <!-- Search Form -->
                                 <div class="header-search-form mr-auto">
                                     <form action="#">
-                                        <input type="search" placeholder="Input your keyword then press enter..." id="search" name="search">
+                                        <input type="search" placeholder="Input your keyword then press enter..."
+                                               id="search" name="search">
                                         <input class="d-none" type="submit" value="submit">
                                     </form>
                                 </div>
@@ -209,6 +213,15 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-8">
                 <!-- Comment Area Start -->
+                @if(Session::has('postcomment_message'))
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong><i class="fa fa-check-circle"></i> Comment submitted!</strong>
+                        Your comment is awaiting moderation
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 <div class="comment_area section_padding_50 clearfix">
                     <div class="gazette-heading">
                         <h4 class="font-bold">Discussion</h4>
@@ -216,67 +229,168 @@
 
                     <ol>
                         <!-- Single Comment Area -->
-                        <li class="single_comment_area">
-                            <div class="comment-wrapper d-md-flex align-items-start">
-                                <!-- Comment Meta -->
-                                <div class="comment-author">
-                                    <img src="{{asset('img/imgfront/blog-img/25.jpg')}}" alt="">
-                                </div>
-                                <!-- Comment Content -->
-                                <div class="comment-content">
-                                    <h5>John Doe</h5>
-                                    <span class="comment-date font-pt">December 18, 2017</span>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum nunc libero, vitae rutrum nunc porta id. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam arcu augue, semper at elementum nec, cursus nec ante.</p>
-                                    <a class="reply-btn" href="#">Reply <i class="fa fa-reply" aria-hidden="true"></i></a>
-                                </div>
-                            </div>
-                            <ol class="children">
-                                <li class="single_comment_area">
-                                    <div class="comment-wrapper d-md-flex align-items-start">
-                                        <!-- Comment Meta -->
-                                        <div class="comment-author">
-                                            <img src="{{asset('img/imgfront/blog-img/25.jpg')}}" alt="">
+                        @foreach($post->postcomments as $postcomment)
+                            @if($postcomment->is_active)
+                                @if($postcomment->reply_id == 0)
+                                    <li class="single_comment_area">
+                                        <div class="comment-wrapper d-md-flex align-items-start">
+                                            <!-- Comment Meta -->
+                                            <div class="comment-author">
+                                                <img class="rounded-circle"
+                                                     src="{{$postcomment->user->photo ? $postcomment->user->photo->file : 'http://via.placeholder.com/70x70'}}"
+                                                     alt="">
+                                            </div>
+                                            <!-- Comment Content -->
+                                            <div class="comment-content">
+                                                <h5>{{$postcomment->user->name}}</h5>
+                                                <span
+                                                    class="comment-date font-pt">{{$postcomment->created_at->diffForHumans()}}</span>
+                                                <p>{{$postcomment->body}}</p>
+                                                <p>
+                                                    <a class="reply-btn" data-toggle="collapse"
+                                                       href="#{{$postcomment->id}}" role="button" aria-expanded="false"
+                                                       aria-controls="collapseExample">
+                                                        Reply <i class="fa fa-reply"
+                                                                 aria-hidden="true"></i>
+                                                    </a>
+                                                </p>
+                                                <div class="collapse" id="{{$postcomment->id}}">
+                                                    <div class="card card-body">
+                                                        @auth
+                                                            <div class="leave-comment-area clearfix">
+                                                                <div class="comment-form">
+                                                                    <div class="gazette-heading">
+                                                                        <h5 class="font-bold mb-2">Leave a Reply</h5>
+                                                                    </div>
+                                                                    <!-- Comment Form -->
+                                                                    <form action="{{route('comments.store')}}"
+                                                                          method="post">
+                                                                        @csrf
+                                                                        <input type="hidden" name="post_id"
+                                                                               value="{{$post->id}}">
+                                                                        <input type="hidden" name="reply_id"
+                                                                               value="{{$postcomment->id}}">
+                                                                        <div class="form-group">
+                                                                        <textarea class="form-control" name="body"
+                                                                                  id="body" cols="30" rows="10"
+                                                                                  placeholder="Description"></textarea>
+                                                                        </div>
+                                                                        <button type="submit"
+                                                                                class="btn leave-comment-btn">
+                                                                            SUBMIT <i
+                                                                                class="fa fa-angle-right ml-2"></i>
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        @endauth
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <!-- Comment Content -->
-                                        <div class="comment-content">
-                                            <h5>John Doe</h5>
-                                            <span class="comment-date text-muted">December 18, 2017</span>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dictum nunc libero, vitae rutrum nunc porta id. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam arcu augue, semper at elementum nec, cursus nec ante.</p>
-                                            <a class="reply-btn" href="#">Reply <i class="fa fa-reply" aria-hidden="true"></i></a>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ol>
-                        </li>
+                                        @foreach($post->postcomments as $postreply)
+                                            @if($postreply->reply_id == $postcomment->id)
+                                                <ol class="children">
+                                                    <li class="single_comment_area">
+                                                        <div class="comment-wrapper d-md-flex align-items-start">
+                                                            <!-- Comment Meta -->
+                                                            <div class="comment-author">
+                                                                <img class="rounded-circle"
+                                                                     src="{{$postreply->user->photo ? $postreply->user->photo->file : 'http://via.placeholder.com/70x70'}}"
+                                                                     alt="">
+                                                            </div>
+                                                            <!-- Comment Content -->
+                                                            <div class="comment-content">
+                                                                <h5>{{$postreply->user->name}}</h5>
+                                                                <span
+                                                                    class="comment-date font-pt">{{$postreply->created_at->diffForHumans()}}</span>
+                                                                <p>{{$postreply->body}}</p>
+                                                                <p>
+                                                                    <a class="reply-btn" data-toggle="collapse"
+                                                                       href="#{{$postreply->id}}" role="button"
+                                                                       aria-expanded="false"
+                                                                       aria-controls="collapseExample">
+                                                                        Reply <i class="fa fa-reply"
+                                                                                 aria-hidden="true"></i>
+                                                                    </a>
+                                                                </p>
+                                                                <div class="collapse" id="{{$postreply->id}}">
+                                                                    <div class="card card-body">
+                                                                        @auth
+                                                                            <div class="leave-comment-area clearfix">
+                                                                                <div class="comment-form">
+                                                                                    <div class="gazette-heading">
+                                                                                        <h5 class="font-bold mb-2">Leave
+                                                                                            a Reply</h5>
+                                                                                    </div>
+                                                                                    <!-- Comment Form -->
+                                                                                    <form
+                                                                                        action="{{route('comments.store')}}"
+                                                                                        method="post">
+                                                                                        @csrf
+                                                                                        <input type="hidden"
+                                                                                               name="post_id"
+                                                                                               value="{{$post->id}}">
+                                                                                        <input type="hidden"
+                                                                                               name="reply_id"
+                                                                                               value="{{$postreply->id}}">
+                                                                                        <div class="form-group">
+                                                                        <textarea class="form-control" name="body"
+                                                                                  id="body" cols="30" rows="10"
+                                                                                  placeholder="Description"></textarea>
+                                                                                        </div>
+                                                                                        <button type="submit"
+                                                                                                class="btn leave-comment-btn">
+                                                                                            SUBMIT <i
+                                                                                                class="fa fa-angle-right ml-2"></i>
+                                                                                        </button>
+                                                                                    </form>
+                                                                                </div>
+                                                                            </div>
+                                                                        @endauth
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ol>
+                                            @endif
+                                        @endforeach
+                                    </li>
+                                @endif
+                            @endif
+                        @endforeach
                     </ol>
                 </div>
                 <!-- Leave A Comment -->
-                <div class="leave-comment-area clearfix">
-                    <div class="comment-form">
-                        <div class="gazette-heading">
-                            <h4 class="font-bold">leave a comment</h4>
+                @auth
+                    <div class="leave-comment-area clearfix">
+                        <div class="comment-form">
+                            <div class="gazette-heading">
+                                <h4 class="font-bold">leave a comment</h4>
+                            </div>
+                            <!-- Comment Form -->
+                            <form action="{{route('comments.store')}}" method="post">
+                                @csrf
+                                <input type="hidden" name="post_id" value="{{$post->id}}">
+                                <input type="hidden" name="reply_id"
+                                       value="0">
+                                <div class="form-group">
+                                <textarea class="form-control" name="body" id="body" cols="30" rows="10"
+                                          placeholder="Description"></textarea>
+                                </div>
+                                <button type="submit" class="btn leave-comment-btn">SUBMIT <i
+                                        class="fa fa-angle-right ml-2"></i></button>
+                            </form>
                         </div>
-                        <!-- Comment Form -->
-                        <form action="#" method="post">
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="contact-name" placeholder="Enter Your Full Name">
-                            </div>
-                            <div class="form-group">
-                                <input type="email" class="form-control" id="contact-email" placeholder="Email">
-                            </div>
-                            <div class="form-group">
-                                <textarea class="form-control" name="message" id="message" cols="30" rows="10" placeholder="Message"></textarea>
-                            </div>
-                            <button type="submit" class="btn leave-comment-btn">SUBMIT <i class="fa fa-angle-right ml-2"></i></button>
-                        </form>
                     </div>
-                </div>
+                @endauth
             </div>
         </div>
     </div>
 </section>
 <!-- Footer Area Start -->
-<footer class="footer-area bg-img background-overlay" style="background-image: url(img/bg-img/4.jpg);">
+<footer class="footer-area bg-img background-overlay" style="background-image: url({{asset('img/bg-img/4.jpg')}});">
     <!-- Top Footer Area -->
     <div class="top-footer-area section_padding_100_70">
         <div class="container">
@@ -391,7 +505,10 @@
                 <div class="col-12">
                     <div class="copywrite-text">
                         <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+                            All rights reserved | This template is made with <i class="fa fa-heart-o"
+                                                                                aria-hidden="true"></i> by <a
+                                href="https://colorlib.com" target="_blank">Colorlib</a>
                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                         </p>
                     </div>

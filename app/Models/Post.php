@@ -21,7 +21,7 @@ class Post extends Model
         return $this->belongsTo(Photo::class);
     }
     public function postcomments(){
-        return $this->hasMany(PostComment::class);
+        return $this->hasMany(Comment::class);
     }
     /** searching/filtering **/
     public function scopeFilter($query, array $filters){
